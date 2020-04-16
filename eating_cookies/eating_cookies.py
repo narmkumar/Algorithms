@@ -6,7 +6,13 @@ import sys
 # a solution that is more efficient than the naive 
 # recursive solution
 def eating_cookies(n, cache=None):
-  pass
+    res = [1, 1, 2] + [0] * (n-2)
+    for i in range(3, n+1):
+        res[i] = (sum(res[i-3:i]))
+    return res[n]
+
+
+print(eating_cookies(10000))
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:

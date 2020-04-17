@@ -42,40 +42,34 @@ be taking and outputs the combination with the best value.
 
 
 
-
 # Memoized version of our brute-force solution
 def knapsack_solver(items, capacity):
-    cache = [[0] * (capacity + 1) for _ in range(len(items) + 1)]
+  cache = [[0] * (capacity + 1) for _ in range(len(items) + 1)]
 
-
-
-def knapsack_memoized_helper(index, capacity, value=0, bag=set()):
+  def knapsack_memoized_helper(index, capacity, value=0, bag=set()):
     answer = cache[index][capacity]
     if answer == 0:
-        answer = knapsack_bf_helper(index, capacity, value, bag)
-        cache[index][capacity] = answer
+      answer = knapsack_bf_helper(index, capacity, value, bag)
+      cache[index][capacity] = answer
     return answer
 
-
-
-def knapsack_bf_helper(index, capacity, value=0, bag=set()):
+  def knapsack_bf_helper(index, capacity, value=0, bag=set()):
     # No remaining items that fit
     if index == -1:
-        return value, bag
+      return value, bag
     elif items[index].size > capacity:
         return knapsack_memoized_helper(index - 1, capacity, value, bag)
     else:
-        # Recurse cases of taking item/not taking item, return max
-        bag_copy = bag.copy()  # Copy to avoid marking everything taken
-        bag_copy.add(index)
-        # Calculate the value of taking this item
-        r1 = knapsack_memoized_helper(index - 1, capacity - items[index].size, value + items[index].value, bag_copy)
-        # Calculate the value of not taking this item
-        r2 = knapsack_memoized_helper(index - 1, capacity, value, bag)
-        # Choose the option with the larger value
-        return max(r1, r2, key=lambda tup: tup[0])
-
-
+      # Recurse cases of taking item/not taking item, return max
+      bag_copy = bag.copy() # Copy to avoid marking everything taken
+      bag_copy.add(index)
+      # Calculate the value of taking this item
+      r1 = knapsack_memoized_helper(index - 1, capacity - items[index].size, value + items[index].value, bag_copy)
+      # Calculate the value of not taking this item
+      r2 = knapsack_memoized_helper(index - 1, capacity, value, bag)
+      # Choose the option with the larger value
+      return max(r1, r2, key=lambda tup: tup[0])
+    
   answer = knapsack_bf_helper(len(items) - 1, capacity)
   return {'Value': answer[0], 'Chosen': sorted(list(answer[1]))}
 
@@ -86,7 +80,7 @@ Incorrect but feasible and efficient solution for the knapsack problem.
 # def knapsack_solver(items, capacity):
 #   value = 0
 #   weight = 0
-#   bag = set()
+#   bag = set() 
 #   # Relax the problem by considering items in increasing order of weight by value
 #   norm_items = [Item(item.index, float(item.size) / item.value, item.value) for item in items]
 #   sorted_items = sorted(norm_items, key=lambda item: item.size)
@@ -111,7 +105,7 @@ if __name__ == '__main__':
     for line in file_contents.readlines():
       data = line.rstrip().split()
       items.append(Item(int(data[0]), int(data[1]), int(data[2])))
-
+    
     file_contents.close()
     print(knapsack_solver(items, capacity))
   else:
